@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart BeU - Bank Islam (Desktop)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fafafa;
+            color: #1e293b;
+        }
+        
+        .sidebar {
+            background: linear-gradient(135deg, #d12f2f 0%, #ec4899 100%);
+            width: 280px;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-collapsed {
+            width: 80px;
+        }
+        
+        .sidebar-collapsed .sidebar-text {
+            display: none;
+        }
+        
+        .sidebar-collapsed .logo-text {
+            display: none;
+        }
+        
+        .sidebar-collapsed .menu-item {
+            justify-content: center;
+        }
+        
+        .content-area {
+            margin-left: 280px;
+            transition: all 0.3s ease;
+        }
+        
+        .content-collapsed {
+            margin-left: 80px;
+        }
+        
+        .card {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .notification-dot {
+            width: 8px;
+            height: 8px;
+            top: 0;
+            right: 0;
+            background-color: #ec4899;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #fce7f3;
+            border-radius: 4px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #d12f2f 0%, #ec4899 100%);
+            border-radius: 4px;
+            width: 65%;
+        }
+        
+        .active-menu {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 3px solid white;
+        }
+        
+        .primary-button {
+            background: linear-gradient(90deg, #d12f2f 0%, #ec4899 100%);
+            color: white;
+        }
+        
+        .primary-button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="sidebar text-white fixed h-full" id="sidebar">
+            <div class="p-5 flex items-center">
+                <div class="bg-white p-2 rounded-lg mr-3">
+                    <i class="fas fa-university text-red-600 text-xl"></i>
+                </div>
+                <span class="logo-text font-bold text-lg">Bank Islam BeU</span>
+            </div>
+            
+            <div class="mt-8 px-4">
+                <div class="mb-8">
+                    <p class="sidebar-text text-xs uppercase text-pink-200 mb-3">Main Menu</p>
+                    <a href="index.html" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1 active-menu">
+                        <i class="fas fa-home mr-3"></i>
+                        <span class="sidebar-text">Home</span>
+                    </a>
+                    <a href="data.html" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                        <i class="fas fa-table mr-3"></i>
+                        <span class="sidebar-text">Data Entry</span>
+                    </a>
+                    <a href="reports.html" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                        <i class="fas fa-chart-line mr-3"></i>
+                        <span class="sidebar-text">Reports</span>
+                    </a>
+                    <a href="profile.html" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+    <i class="fas fa-user-circle mr-3"></i>
+    <span class="sidebar-text">Profile</span>
+</a>
+
+                </div>
+                
+                <div class="mb-8">
+                    <p class="sidebar-text text-xs uppercase text-pink-200 mb-3">Administration</p>
+                    <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                        <i class="fas fa-users mr-3"></i>
+                        <span class="sidebar-text">Staff Management</span>
+                    </a>
+                    <a href="#" class="menu-item flex items-center py-3 px-4 rounded-lg mb-1">
+                        <i class="fas fa-cog mr-3"></i>
+                        <span class="sidebar-text">System Settings</span>
+                    </a>
+                </div>
+                
+                <div class="px-4 py-6 bg-pink-800 bg-opacity-30 rounded-lg mx-2">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-pink-500 p-2 rounded-full mr-3">
+                            <i class="fas fa-headset text-white"></i>
+                        </div>
+                        <span class="sidebar-text text-sm">Need help?</span>
+                    </div>
+                    <a href="confirmlogout.html"
+   class="block w-full text-center bg-white text-pink-600 py-2 rounded-lg text-sm font-medium sidebar-text">
+   Log Out
+</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content-area flex-1 overflow-auto" id="contentArea">
+            <!-- Top Navigation -->
+            <header class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between">
+                <div class="flex items-center">
+                    <button id="toggleSidebar" class="mr-4 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-xl font-semibold">Home</h1>
+                </div>
+                
+                <div class="flex items-center">
+                    <div class="relative mr-6">
+                        <input type="text" placeholder="Search reports or data..." 
+                               class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-64 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="relative">
+                            <a href="notification.html" class="p-2 text-gray-500 hover:text-gray-700 relative">
+                                <i class="fas fa-bell text-xl"></i>
+                                <span class="notification-dot rounded-full absolute"></span>
+                            </a>                            
+                        </div>
+                        <div class="flex items-center">
+                            <img id="userImage" src="https://gizmodo.com/app/uploads/2025/06/Kpop-Demon-Hunters-Huntrix-Netflix.jpg" alt="User" class="w-8 h-8 rounded-full mr-2">
+                            <span class="font-medium" id="userName">Loading...</span>
+                        </div>                       
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Dashboard Content -->
+            <main class="p-6">
+                <!-- Welcome Banner -->
+                <div class="bg-gradient-to-r from-red-600 to-pink-500 text-white rounded-xl p-6 mb-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-2xl font-bold mb-2">
+                                Welcome back, <span id="welcomeName">Loading...</span>!
+                              </h2>                              
+                            <p class="opacity-90 mb-4">You have 3 pending tasks and 2 new messages in your inbox</p>
+                            <button class="bg-white text-pink-600 px-4 py-2 rounded-lg font-medium">
+                                View Messages
+                            </button>
+                        </div>
+                        <div class="bg-white bg-opacity-20 p-4 rounded-lg">
+                            <i class="fas fa-envelope-open-text text-3xl"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-xl p-5 card">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm mb-1">Total Staff</p>
+                                <h3 id="totalStaff" class="text-2xl font-bold mb-2">Loading...</h3>
+                                <p id="percentChange" class="text-green-500 text-sm font-medium">
+                                    <i id="arrowIcon" class="fas fa-arrow-up mr-1"></i> <span id="percentValue">0%</span> from last month
+                                </p>
+                            </div>
+                                                    
+                            <div class="bg-red-100 p-3 rounded-lg">
+                                <i class="fas fa-users text-red-600"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-5 card">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm mb-1">Pending Reports</p>
+                                <h3 class="text-2xl font-bold mb-2">5</h3>
+                                <p class="text-red-500 text-sm font-medium">
+                                    <i class="fas fa-arrow-down mr-1"></i> 2 from yesterday
+                                </p>
+                            </div>
+                            <div class="bg-pink-100 p-3 rounded-lg">
+                                <i class="fas fa-file-alt text-pink-600"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-5 card">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm mb-1">Uploaded Files</p>
+                                <h3 class="text-2xl font-bold mb-2">128</h3>
+                                <p class="text-green-500 text-sm font-medium">
+                                    <i class="fas fa-arrow-up mr-1"></i> 24 new this week
+                                </p>
+                            </div>
+                            <div class="bg-rose-100 p-3 rounded-lg">
+                                <i class="fas fa-file-upload text-rose-600"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-5 card">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-gray-500 text-sm mb-1">System Health</p>
+                                <h3 class="text-2xl font-bold mb-2">98%</h3>
+                                <p class="text-green-500 text-sm font-medium">
+                                    <i class="fas fa-check-circle mr-1"></i> All systems normal
+                                </p>
+                            </div>
+                            <div class="bg-purple-100 p-3 rounded-lg">
+                                <i class="fas fa-heartbeat text-purple-600"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Main Content Area -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Recent Activities -->
+                    <div class="lg:col-span-2 bg-white rounded-xl p-5">
+                        <div class="flex justify-between items-center mb-5">
+                            <h3 class="text-lg font-semibold">Recent Activities</h3>
+                            <button class="text-pink-600 text-sm font-medium">View All</button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="bg-red-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-file-import text-red-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">New data imported by Ahmad</p>
+                                    <p class="text-gray-500 text-sm">Customer transaction records for Q1 2023</p>
+                                    <p class="text-gray-400 text-xs mt-1">10 minutes ago</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="bg-green-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-check-circle text-green-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">Report approved by Manager</p>
+                                    <p class="text-gray-500 text-sm">Monthly financial compliance report</p>
+                                    <p class="text-gray-400 text-xs mt-1">2 hours ago</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="bg-pink-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-user-plus text-pink-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">New staff account created</p>
+                                    <p class="text-gray-500 text-sm">Nurul Hafizah - Customer Service</p>
+                                    <p class="text-gray-400 text-xs mt-1">Yesterday, 4:30 PM</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="bg-amber-100 p-2 rounded-full mr-4">
+                                    <i class="fas fa-exclamation-triangle text-amber-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium">System maintenance scheduled</p>
+                                    <p class="text-gray-500 text-sm">Saturday, 2:00 AM - 4:00 AM</p>
+                                    <p class="text-gray-400 text-xs mt-1">Yesterday, 11:00 AM</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Data Submission Progress -->
+                    <div class="bg-white rounded-xl p-5">
+                        <h3 class="text-lg font-semibold mb-5">Your Progress</h3>
+                        
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium text-sm">Monthly Data Submission</span>
+                                <span class="text-pink-600 text-sm">65%</span>
+                            </div>
+                            <div class="progress-bar mb-1">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <p class="text-gray-500 text-xs">Due in 5 days</p>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium text-sm">Training Completion</span>
+                                <span class="text-pink-600 text-sm">80%</span>
+                            </div>
+                            <div class="progress-bar mb-1">
+                                <div class="progress-fill" style="width: 80%;"></div>
+                            </div>
+                            <p class="text-gray-500 text-xs">2 modules remaining</p>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <span class="font-medium text-sm">Performance Rating</span>
+                                <span class="text-pink-600 text-sm">4.2/5</span>
+                            </div>
+                            <div class="progress-bar mb-1">
+                                <div class="progress-fill" style="width: 84%;"></div>
+                            </div>
+                            <p class="text-gray-500 text-xs">Above department average</p>
+                        </div>
+                        
+                        <button class="w-full primary-button py-3 rounded-lg font-medium">
+                            Complete Submission
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- System Announcements -->
+                <div class="bg-white rounded-xl p-5 mt-6">
+                    <div class="flex justify-between items-center mb-5">
+                        <h3 class="text-lg font-semibold">System Announcements</h3>
+                        <button class="text-pink-600 text-sm font-medium">View All</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-gradient-to-r from-red-600 to-pink-500 text-white rounded-xl p-5">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-xs opacity-80 mb-1">NEW FEATURE</p>
+                                    <h4 class="font-bold text-lg mb-2">Metabase Integration</h4>
+                                    <p class="text-sm mb-4">Now with real-time dashboard updates</p>
+                                    <button class="bg-white text-pink-600 px-4 py-2 rounded-lg text-sm font-medium">
+                                        Learn More
+                                    </button>
+                                </div>
+                                <div class="bg-white bg-opacity-20 p-3 rounded-lg">
+                                    <i class="fas fa-sync-alt text-white text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-pink-600 to-purple-600 text-white rounded-xl p-5">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-xs opacity-80 mb-1">UPDATE
+
+                                        <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+    apiKey: "AIzaSyAIZJMg4cUBnjKimS18n48clFUuK3svcv0",
+    authDomain: "smart-be-u-ursav6.firebaseapp.com",
+    projectId: "smart-be-u-ursav6",
+    storageBucket: "smart-be-u-ursav6.appspot.com",
+    messagingSenderId: "764598682979",
+    appId: "1:764598682979:web:51be3aec5f2e9955517f56"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Check if logged in
+firebase.auth().onAuthStateChanged(user => {
+    if (!user) {
+        // Kalau tak login, redirect ke login
+        window.location.href = "login.html";
+        return;
+    }
+
+    // Ambil data user dari Firestore
+    db.collection('staffs').doc(user.uid).get()
+    .then(doc => {
+        if (doc.exists) {
+            const data = doc.data();
+
+            // Update name
+            document.getElementById('userName').textContent =
+                data.name || user.displayName || 'Unnamed';
+
+                // 👇 NEW: Welcome name
+          document.getElementById('welcomeName').textContent =
+              data.name || user.displayName || 'User';
+
+            // Update profile picture pakai field profilePic
+            document.getElementById('userImage').src =
+                data.profilePicture || user.photoURL || 'https://gizmodo.com/app/uploads/2025/06/Kpop-Demon-Hunters-Huntrix-Netflix.jpg';
+        } else {
+            console.error("No such document!");
+        }
+    })
+    .catch(err => {
+        console.error("Error getting user data:", err);
+    });
+});
+
+// Kira total staff bila page load
+firebase.auth().onAuthStateChanged(user => {
+    if (!user) {
+        window.location.href = "login.html"; // redirect kalau belum login
+        return;
+    }
+
+    const db = firebase.firestore();
+
+    db.collection("staffs").get()
+    .then(snapshot => {
+        const total = snapshot.size; // jumlah dokumen
+        document.getElementById("totalStaff").textContent = total;
+    })
+    .catch(err => {
+        console.error("Error getting staff count:", err);
+        document.getElementById("totalStaff").textContent = "Error";
+    });
+});
+
+firebase.auth().onAuthStateChanged(user => {
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    const db = firebase.firestore();
+
+    Promise.all([
+        db.collection("staffs").get(),
+        db.collection("stats").doc("summary").get()
+    ])
+    .then(([staffSnap, statsDoc]) => {
+        const totalNow = staffSnap.size;
+        const statsData = statsDoc.exists ? statsDoc.data() : {};
+        const totalLastWeek = statsData.totalLastWeek || totalNow;
+
+        // Update jumlah sekarang
+        document.getElementById("totalStaff").textContent = totalNow;
+
+        // Kira peratus naik/turun minggu lepas
+        let percentChange = 0;
+        if (totalLastWeek > 0) {
+            percentChange = ((totalNow - totalLastWeek) / totalLastWeek) * 100;
+        }
+
+        // Update UI
+        const percentValue = document.getElementById("percentValue");
+        const arrowIcon = document.getElementById("arrowIcon");
+        const percentEl = document.getElementById("percentChange");
+
+        percentValue.textContent = Math.abs(percentChange.toFixed(1)) + "%";
+
+        if (percentChange > 0) {
+            percentEl.classList.remove("text-red-500");
+            percentEl.classList.add("text-green-500");
+            arrowIcon.classList.remove("fa-arrow-down");
+            arrowIcon.classList.add("fa-arrow-up");
+        } else if (percentChange < 0) {
+            percentEl.classList.remove("text-green-500");
+            percentEl.classList.add("text-red-500");
+            arrowIcon.classList.remove("fa-arrow-up");
+            arrowIcon.classList.add("fa-arrow-down");
+        } else {
+            percentEl.classList.remove("text-green-500", "text-red-500");
+            percentEl.classList.add("text-gray-500");
+        }
+
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        document.getElementById("totalStaff").textContent = "Error";
+    });
+});
+
+
+
+</script>
+</p>
+</div>
+</html>
