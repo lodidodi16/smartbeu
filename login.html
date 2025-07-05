@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart BeU - Login</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #faf5f5;
+}
+.login-container {
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.header-bg {
+    background: linear-gradient(135deg, #d12f2f 0%, #ec4899 100%);
+    width: 100%;
+    padding: 2rem;
+    border-radius: 0 0 1.5rem 1.5rem;
+    text-align: center;
+}
+.card-shadow {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+.input-focus:focus {
+    border-color: #ec4899;
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2);
+}
+.login-btn {
+    background: linear-gradient(90deg, #ec4899 0%, #f43f5e 100%);
+    transition: all 0.3s ease;
+}
+.login-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+.bank-logo {
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+</style>
+</head>
+<body>
+
+<div class="login-container">
+<header class="header-bg text-white rounded-t-3xl text-center">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTH8J3W6uWqoB8qN_bmX5iUIgX6YNjHR0v9g&s" alt="Bank Islam Logo" class="bank-logo w-24 h-24 mx-auto mb-4 rounded-full bg-white p-2">
+    <h1 class="text-3xl font-bold mb-2">Smart BeU</h1>
+    <p class="opacity-90">Bank Islam Malaysia's Internal Data Platform</p>
+</header>
+
+<main class="px-6 mt-6">
+<div class="bg-white rounded-2xl p-6 card-shadow">
+    <h2 class="text-xl font-semibold mb-6 text-center text-gray-800">Staff Login</h2>
+
+    <form id="loginForm">
+        <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Corporate Email</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-envelope text-gray-400"></i>
+                </div>
+                <input 
+                    type="email" 
+                    id="email" 
+                    class="input-focus block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none" 
+                    placeholder="your.name@bankislam.com.my"
+                    required>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-lock text-gray-400"></i>
+                </div>
+                <input 
+                    type="password" 
+                    id="password" 
+                    class="input-focus block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none" 
+                    placeholder="••••••••"
+                    required>
+                <button type="button" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600" id="togglePassword">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center">
+                <input 
+                    type="checkbox" 
+                    id="remember" 
+                    class="h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded">
+                <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
+            </div>
+            <a href="#" class="text-sm text-pink-600 hover:underline">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="login-btn w-full text-white py-3 rounded-lg font-medium mb-4">
+            Log In
+        </button>
+    </form>
+</div>
+</main>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+    apiKey: "AIzaSyAIZJMg4cUBnjKimS18n48clFUuK3svcv0",
+    authDomain: "smart-be-u-ursav6.firebaseapp.com",
+    projectId: "smart-be-u-ursav6",
+    storageBucket: "smart-be-u-ursav6.appspot.com",
+    messagingSenderId: "764598682979",
+    appId: "1:764598682979:web:51be3aec5f2e9955517f56"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Toggle password
+document.getElementById('togglePassword').addEventListener('click', () => {
+    const passInput = document.getElementById('password');
+    const icon = document.querySelector('#togglePassword i');
+    if (passInput.type === 'password') {
+        passInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+});
+
+document.getElementById('loginForm').addEventListener('submit', e => {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const remember = document.getElementById('remember').checked;
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+.then(userCredential => {
+    const user = userCredential.user;
+    console.log("USER:", user);
+
+    if (!user || !user.uid) {
+        alert("Login OK tapi tiada UID, tidak dapat update Firestore");
+        return;
+    }
+
+    db.collection('staffs').doc(user.uid).set({
+        email: user.email || '',
+        lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+        rememberMe: remember
+    }, { merge: true })
+    .then(() => {
+        alert("Login successful!");
+        window.location.href = "index.html";
+    })
+    .catch(err => {
+        alert("Error updating user data: " + err.message);
+    });
+
+})
+.catch(err => {
+    alert("Login error: " + err.message);
+});
+
+});
+</script>
+</body>
+</html>
